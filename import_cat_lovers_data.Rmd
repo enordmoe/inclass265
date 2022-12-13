@@ -1,0 +1,35 @@
+---
+title: "Import cat data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+### Import the data
+
+```{r}
+cat_lovers <- read_csv(file = "data/cat-lovers.csv")
+```
+
+### Compute summary statistics  
+
+```{r}
+cat_lovers %>% summarise(mean_cats = mean(number_of_cats))
+```
+
+Do we have missing data?  
+
+```{r}
+cat_lovers %>% summarise(mean_cats = mean(number_of_cats, na.rm = TRUE))
+```
+
+Inspect the data carefully!  
+
+
+```{r, eval = FALSE}
+View(cat_lovers)
+```
+

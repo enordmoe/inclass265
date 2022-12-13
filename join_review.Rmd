@@ -1,0 +1,36 @@
+---
+title: "Quick Review of Joins"  
+output: 
+  github_document: 
+    toc: true
+    toc_depth: 2
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+Create the tibbles:  
+
+```{r}
+x <- tribble(
+  ~player, ~club,
+  "Ronaldo",	"Juventus",
+  "Lionel", "Barcelona",
+  "Neymar", "PSG"
+)
+y <- tribble(
+  ~player, ~country,
+  "Ronaldo",	"Portugal",
+  "Lionel", "Argentina",
+  "Kevin", "Belgium"
+)
+```
+
+
