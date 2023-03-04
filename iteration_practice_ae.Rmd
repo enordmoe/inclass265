@@ -73,7 +73,8 @@ I have installed the **plotly** package for interactive graphics in this project
 
 ```{r}
 library(plotly)
-plot_ly(pokemon,x=~sp_def,y=~sp_atk,type="scatter",mode="markers",size=~total,color = ~legendary,text=~name)
+plot_ly(pokemon, x = ~sp_def, y = ~sp_atk,type = "scatter",
+        mode = "markers", size = ~total, color = ~legendary, text = ~name)
 
 ```
 
