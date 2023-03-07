@@ -1,7 +1,6 @@
 ---
 title: "Model Basics Using Data Scraped from Cars.com"
 subtitle: "Your name here"
-date: "March 5, 2021"
 output: 
   html_document: 
     fig_height: 3.5
