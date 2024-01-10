@@ -15,7 +15,7 @@ To use **ggplot2** functions, we always have to first load the **tidyverse**:
 
 ```{r}
 #| label: setup
-#| include: false
+#| message: false
 library(tidyverse)
 ```
 
