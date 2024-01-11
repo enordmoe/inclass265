@@ -7,78 +7,70 @@ format:
     self-contained: true
 execute:
   warning: false
+  eval: false
 ---
 
+## Setup
 
+First copy and past the following to load the **tidyverse** packages.
 
-## Question 1
-
-Use the Palmer Penguins dataset to complete the following tasks. To load the data, copy and paste the following to the console:
 ```{r}
 library(tidyverse)
+```
+
+This will always be part of our setup.
+
+## Palmer Penguins exercises
+
+Use the Palmer Penguins data set introduced in the text to complete the following tasks.
+
+1.  Load the package containing the `penguins` data set:
+
+```{r}
 library(palmerpenguins)
 ```
 
+2.  Make a bar plot of `species` of `penguins`, where you assign `species` to the `y` aesthetic. How is this plot different?
 
-This a Quarto document. To learn more about Quarto see <https://quarto.org>.
+3.  How are the following two plots different? Which aesthetic, `color` or `fill`, is more useful for changing the color of bars?
 
-Click the **Code** button in the header to see the full source code of this document.
+    ```{r}
+    ggplot(penguins, aes(x = species)) +
+      geom_bar(color = "red")
 
-Here we call the R `summary()` function---the function's output is included immediately below:
+    ggplot(penguins, aes(x = species)) +
+      geom_bar(fill = "red")
+    ```
 
-```{r}
-summary(cars)
-```
+4.  Use the `penguins` data to determine what the `bins` argument in \`geom_histogram() does.
 
-## Plot Output
+5.  Make a scatterplot of `bill_depth_mm` vs. `bill_length_mm` and color the points by `species`. What does adding coloring by species reveal about the relationship between these two variables? What about faceting by `species`?
 
-You can also embed plots, for example:
+6.  Why does the following yield two separate legends? How would you fix it to combine the two legends?
 
-```{r}
-#| label: fig-pressure
-#| fig-cap: "Pressure"
-#| code-fold: true
+    ```{r}
+    ggplot(
+      data = penguins,
+      mapping = aes(
+        x = bill_length_mm, y = bill_depth_mm, 
+        color = species, shape = species
+      )
+    ) +
+      geom_point() +
+      labs(color = "Species")
+    ```
 
-library(ggplot2)
-dat <- data.frame(cond = rep(c("A", "B"), each=10),
-                  xvar = 1:20 + rnorm(20,sd=3),
-                  yvar = 1:20 + rnorm(20,sd=3))
+7.  Create the two following stacked bar plots. Which question can you answer with the first one? Which question can you answer with the second one?
 
-ggplot(dat, aes(x=xvar, y=yvar)) +
-    geom_point(shape=1) + 
-    geom_smooth() 
-```
+    ```{r}
+    ggplot(penguins, aes(x = island, fill = species)) +
+      geom_bar(position = "fill")
+    ggplot(penguins, aes(x = species, fill = island)) +
+      geom_bar(position = "fill")
+    ```
 
-Note that the `code-fold: true` parameter was added to the code chunk to hide the code by default (click "Code" above the plot to see the code).
+## Diamonds data set exercises
 
-The use of the `label` and `fig-cap` options make this a cross-referenceable figure (see @fig-pressure).
+1.  The **diamonds** data is a rather large data set that is a bult-in part of the **tidyverse**. Enter the `?diamonds` command at the console to learn about the number of cases and variables. You can also enter `View(diamonds)` and `glimpse(dimaonds)` at the console to get a glimpse at the data.
 
-## Interactivity
-
-You can also add interactive plots. For example:
-
-```{r}
-#| label: fig-temperatures
-#| fig-cap: "New Haven Temperatures"
-
-library(dygraphs)
-dygraph(nhtemp) %>% 
-  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))
-```
-
-## Tables
-
-Use the `knitr::kable()` function to print tables as HTML:
-
-```{r}
-knitr::kable(head(ggplot2::diamonds))
-```
-
-
-## LaTeX Math
-
-You can also include LaTeX math:
-
-$$
-P\left(A=2\middle|\frac{A^2}{B}>4\right)
-$$
+2.  Make a histogram of the `carat` variable . Experiment with different binwidths. What binwidth reveals the most interesting patterns?
