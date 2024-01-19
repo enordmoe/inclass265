@@ -39,14 +39,12 @@ flights
 
 2)  Identify all the day and time variables. How are they stored?
 
-
 3)  What is the following doing?
 
 ```{r}
 mydata <- flights |> 
   filter( month == 2, day == 14) 
 ```
-
 
 4)  Are the 2 filter commands above equivalent? If not, which do you prefer? What is the other one doing?
 
@@ -100,14 +98,14 @@ flights |>
 ```
 
 8)  Find the flights that departed between midnight and 8am inclusive.
+
 ```{r}
 
 ```
 
-9) What's wrong with this command: `filter(flights, month = 3)` ?
+9)  What's wrong with this command: `filter(flights, month = 3)` ?
 
-
-10)  What's going on here: `filter(flights, month == 3, month == 4)`?
+10) What's going on here: `filter(flights, month == 3, month == 4)`?
 
 11) Why does `filter(flights, month == (3 | 4))` give us flights in January?!?
 
@@ -116,7 +114,6 @@ flights |>
 13) What proportion of Delta flights into DTW were delayed?
 
 14) How many flights were missing departure times? (Hint: Use the `is.na()` function.)
-
 
 # `arrange()`
 
@@ -150,7 +147,6 @@ flights |>
 ```{r}
 
 ```
-
 
 # `distinct()`
 
@@ -196,4 +192,3 @@ flights |>
   count(origin, dest,sort = TRUE) |> 
   arrange(n)
 ```
-
