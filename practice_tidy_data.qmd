@@ -1,0 +1,55 @@
+---
+title: "Chapter 5: Data Tidying Practice"
+author: "Intro to Data Science"
+date: today
+format: 
+    gfm: 
+      toc: true
+      toc-depth: 2
+      fig-height: 4
+      fig-width: 9
+editor: visual
+execute: 
+  eval: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+**1. Energy Consumption** This problem deals with a dataset containing information on hourly energy consumption data from several electric utilities that are part of the Eastern Interconnection grid in the US. The data are in the file "electric_use.csv" in your data folder. This dataset was created from data in the Hourly Energy Consumption Data on Kaggle (https://www.kaggle.com/robikscube/hourly-energy-consumption/home). (Thanks to a previous MATH 295 student for finding this data source for their Dataset-of-the-Day).
+
+Write a code chunk that does the following:
+
+-   Reads the data set into a tibble called **electric**.
+
+-   The data set as provided is not "tidy". Use appropriate functions from this section to make it a tidy data set called **tidy_electric**.
+
+-   Construct a line plot of hourly consumption data comparing the utilities represented in the data. The line for each utility should be a different color.
+
+**Answer:**
+
+```{r}
+
+```
+
+**2. Calc Enrollments** The next task is to read and tidy the data file "calc_enrollments.csv" which contains enrollment in Calculus sections at K over the course of a decade. I was provided this data in an Excel format but have saved them in CSV form for your use.
+
+Write a code chunk that does the following:
+
+-   Reads the data set into a tibble called **enrollments**.
+
+-   The data set as provided is not "tidy". Use appropriate functions from this section to make it a tidy data set called **tidy_enrollments**. Use appropriate arguments to these functions so that there are no NA values and all columns have the correct types.
+
+-   Construct a point plot of class sizes (y) by year (x) using a different color for each Class (e.g., Calc I, Calc II, ...) and dodging the points so that they don't overlap (that is, for each year, there should be 3 vertical strips of points close together, one for each "Class". Add a single smoothing line that shows the trend in class sizes over all Classes. An example is provided below.
+
+![Figure 1: Enrollments Plot](figures/enrollments_plot_example.png)
+
+**Answer:**
+
+```{r}
+
+```

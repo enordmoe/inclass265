@@ -61,9 +61,8 @@ hfi_data |>
 
 3)  Use the `select()` helper functions to pick variables or groups of variables with similar names or distinguishing strings:
 
-```{=html}
 <!-- -->
-```
+
 a)  Select key variables and all personal freedom variables:
 
 ```{r}
@@ -125,7 +124,6 @@ hfi_data |>
 ```{r}
 
 ```
-
 
 ## More **flights** data examples
 
