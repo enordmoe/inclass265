@@ -46,7 +46,7 @@ chiflights2020 <- read_csv("https://people.kzoo.edu/enordmoe/math265/data/chifli
 
 ## Parsing Examples {.smaller}
 
-Use \`parse_double() for numbers written as strings:
+Use `parse_double()` for numbers written as strings:
 
 ```{r}
 vector1 <- c("1.23e-3", "4.56e2", "7.89e4", "1.23e-5", "6.78e8")
@@ -478,6 +478,6 @@ chiflights2020 |>
 What modifications could you consider to answer other questions? Is there a relative measure that could be helpful?
 :::
 
-## More Practice 
+## More Practice
 
 **Question**: Which destination in the **chiflights2020** dataset shows the greatest variation in air speed? Try measuring variation in at least two different ways to see if you get similar results.
