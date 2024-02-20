@@ -1,6 +1,6 @@
 ---
 title: "Chapter 14: Strings Practice"
-name: "Eric Nordmoe"
+author: "Your name here"
 date: today
 format: 
     html: 
@@ -23,7 +23,7 @@ Many data sets have character strings in them. For example, in a file of tweets 
 In this tutorial, you will learn how to manipulate text data using the package **stringr** and how to match patterns using regular expressions. The package **stringr** Some of the most commonly used commands include:
 
 | Command          | Description                                                 |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `str_sub`        | Extract substring from a given start to end position        |
 | `str_detect`     | Detect presence/absence of first occurrence of substring    |
 | `str_locate`     | Give position (start, end) of first occurrence of substring |
@@ -214,9 +214,9 @@ str_replace(info, last4, "XXXX")
 
 ```
 
-**Remarks**
+# Remarks
 
-1.  As we noted above, certain characters are reserved. If we want to actually reference them in a regular expression, either put them within a bracket, or use a double forward slash.
+1. As we noted above, certain characters are reserved. If we want to actually reference them in a regular expression, either put them within a bracket, or use a double forward slash.
 
 ```{r}
 str_locate(info, "[.]")  #find first instance of period
@@ -224,7 +224,7 @@ str_locate(info, "\\.")  #same
 str_locate(info, ".")    #first instance of any character
 ```
 
-2.  Metacharacters have different meanings within brackets.
+2. Metacharacters have different meanings within brackets.
 
 For example, the caret character "\^" indicates the starting point outside brackets but negation inside.
 
@@ -234,11 +234,11 @@ str_detect(fruits, "[^Pp]")  #any character except 'P' or 'p'
 str_detect(fruits, "^[^Pp]") #start with any character except 'P' or 'p'
 ```
 
-3.  See the summary of regular expressions posted on Moodle under Chapter 14 Strings. This is a much more manageable (but still extensive!) set of regexp expressions as an alternative the the RStudio Cheat Sheet.
+3.  See the summary of regular expressions posted on [Moodle](https://moodle.kzoo.edu/mod/resource/view.php?id=357918). This is a much more manageable (but still extensive!) set of regexp expressions as an alternative the the RStudio Cheat Sheet.
 
-###4. Matching brackets or html tags
+4. Matching brackets or html tags
 
-In many cases, you may want to match brackets such as \[8\] or html tags such as `<table>`.
+In some situations, you may want to match brackets such as \[8\] or html tags such as `<table>`.
 
 ```{r}
 out <- c("abc[8]", "abc[9][20]", "abc[9]def[10][7]", "abc[]")
@@ -252,7 +252,6 @@ To match the left bracket, we write `\\[`. Next we want to match 0 or more occur
 
 ```{r}
 str_view_all(out,  "\\[([^]]*)\\]")
-
 str_replace_all(out, "\\[([^]]*)\\]", "X")
 ```
 
@@ -260,13 +259,12 @@ Compare this to
 
 ```{r}
 str_view_all(out, "\\[(.*)\\]")
-
 str_replace_all(out, "\\[(.*)\\]", "X")
 ```
 
 In this case, we match the first left bracket (indicated by the `\\[`), followed by 0 or more instances of *any* character (the (.\*) portion), which could be a right bracket until the final right bracket `\\]`.
 
-### On your own
+# On your own
 
 1.  Create a vector `veggies` containing "carrot", "bean", "peas", "cabbage", "scallion", "asparagus".
 
@@ -310,6 +308,6 @@ In this case, we match the first left bracket (indicated by the `\\[`), followed
 
 ```
 
-### Resources
+# More Resources
 
 -   [http://www.regular-expressions.info/rlanguage.html](Regular%20expressions%20with%20R)
