@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Your name here">
+<meta name="dcterms.date" content="2024-02-20">
+
+<title>Chapter 14: Strings Practice</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practice_strings_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practice_strings_files/libs/quarto-html/quarto.js"></script>
+<script src="practice_strings_files/libs/quarto-html/popper.min.js"></script>
+<script src="practice_strings_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practice_strings_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practice_strings_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practice_strings_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practice_strings_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practice_strings_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practice_strings_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#extracting-and-locating-substrings" id="toc-extracting-and-locating-substrings" class="nav-link active" data-scroll-target="#extracting-and-locating-substrings"><span class="header-section-number">1</span> Extracting and locating substrings</a></li>
+  <li><a href="#regular-expressions" id="toc-regular-expressions" class="nav-link" data-scroll-target="#regular-expressions"><span class="header-section-number">2</span> Regular expressions</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">3</span> Example</a></li>
+  <li><a href="#remarks" id="toc-remarks" class="nav-link" data-scroll-target="#remarks"><span class="header-section-number">4</span> Remarks</a></li>
+  <li><a href="#on-your-own" id="toc-on-your-own" class="nav-link" data-scroll-target="#on-your-own"><span class="header-section-number">5</span> On your own</a></li>
+  <li><a href="#more-resources" id="toc-more-resources" class="nav-link" data-scroll-target="#more-resources"><span class="header-section-number">6</span> More Resources</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 14: Strings Practice</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your name here </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 20, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Many data sets have character strings in them. For example, in a file of tweets from Twitter (which are basically just strings of characters), perhaps you want to search for occurrences of a certain word or twitter handle. Or a character variable in a data set might be location with a city and state abbreviation, and you want to extract those observations with location containing “NY.”</p>
+<p>In this tutorial, you will learn how to manipulate text data using the package <strong>stringr</strong> and how to match patterns using regular expressions. The package <strong>stringr</strong> Some of the most commonly used commands include:</p>
+<table class="table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>str_sub</code></td>
+<td>Extract substring from a given start to end position</td>
+</tr>
+<tr class="even">
+<td><code>str_detect</code></td>
+<td>Detect presence/absence of first occurrence of substring</td>
+</tr>
+<tr class="odd">
+<td><code>str_locate</code></td>
+<td>Give position (start, end) of first occurrence of substring</td>
+</tr>
+<tr class="even">
+<td><code>str_locate_all</code></td>
+<td>Give positions of all occurrences of a substring</td>
+</tr>
+<tr class="odd">
+<td><code>str_replace</code></td>
+<td>Replace one substring with another</td>
+</tr>
+</tbody>
+</table>
+<section id="extracting-and-locating-substrings" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Extracting and locating substrings</h1>
+<p>First, we introduce some basic commands from <code>stringr</code>.</p>
+<p>The <code>str_sub</code> command extracts substrings from a string (that is, a sequence of characters) given the starting and ending position. For instance, to extract the characters in the second through fourth position or each string in fruits:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># not needed but just to be explicit</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fruits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"apple"</span>, <span class="st">"pineapple"</span>, <span class="st">"Pear"</span>, <span class="st">"orange"</span>, <span class="st">"peach"</span>, <span class="st">"banana"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str_sub</span>(fruits, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ppl" "ine" "ear" "ran" "eac" "ana"</code></pre>
+</div>
+</div>
+<p><strong>Question 1.</strong> What are the characters in the first through third position of each string in fruits?</p>
+<p><strong>Question 2.</strong> What happens if you enter a position number greater than the number of characters in the string? Do this quietly and listen to hear whether R complains!</p>
+<p><strong>Question 3.</strong> What happens if you enter just a single number? What if it’s a negative number?</p>
+<p>The <code>str_detect</code> command checks to see if any instance of a pattern occurs in a string.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fruits, <span class="st">"p"</span>)  <span class="co">#any occurrence of 'p'?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE FALSE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p><strong>Question 4:</strong> Is pattern matching case-sensitive? You should be able to tell by studying the logical results in the previous example.</p>
+<p>To locate the position of a pattern within a string, use <code>str_locate</code>:</p>
+<p><strong>Question 5:</strong> Which fruits contain “an”?</p>
+<p><strong>Question 6:</strong> If there is more than one occurrence of the string, which occurence(s) is/are returned? (Hint: If you’re having trouble with this, have a banana.)</p>
+<p>To find all instances of “an” within each string:</p>
+<p><strong>Question 7:</strong> What kind of object is returned by the <code>str_locate_all()</code> command immediately above?</p>
+<p><strong>Answer</strong></p>
+<p>The command <code>str_locate_all</code> returns a <em>list</em> (more about those <a href="https://r4ds.hadley.nz/rectangling#lists">here</a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">str_locate_all</span>(fruits, <span class="st">"an"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.class</span>(out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>out[[<span class="dv">6</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     start end
+[1,]     2   3
+[2,]     4   5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 4 2 4 3 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unlist</span>(out))<span class="sc">/</span><span class="dv">2</span>    <span class="co">#total number of times "an" occurs in vector fruits</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>The above example makes use of the fact that <code>str_locate_all()</code> returns a list. The command <code>str_count()</code> provides an easier and more direct way to count the number of times “an” occurs in the names of the fruits:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_count</span>(fruits, <span class="st">"an"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0 0 1 0 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">str_count</span>(fruits, <span class="st">"an"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p><strong>Question 8:</strong> Following the example immediately above, use <code>str_detect()</code> or <code>str_count()</code> command to output the number of these 6 words that contain the string “an”.</p>
+</section>
+<section id="regular-expressions" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Regular expressions</h1>
+<p>Now suppose we want to detect or locate words that begin with “p” or end in “e,” or match a more complex criteria. A <strong>regular expression</strong> is a sequence of characters that define a string pattern. It’s a very powerful and flexible albeit at times cryptic way to describe a text pattern of interest. Using the command <code>str_view()</code> and <code>str_view_all()</code> will be helpful for identifying what is actually being matched by each string detection.</p>
+<p>Let’s detect strings that begin with either “p” or “P”. The metacharacter “^” is used to indicate the beginning of the string, and “[Pp]” is used to indicate “P” or “p”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(fruits, <span class="st">"^[Pp]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[2] │ &lt;p&gt;ineapple
+[3] │ &lt;P&gt;ear
+[5] │ &lt;p&gt;each</code></pre>
+</div>
+</div>
+<p>Similarly, the metacharacter “$” is used to signify the end of a string.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(fruits, <span class="st">"e$"</span> )   <span class="co">#end in 'e'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ appl&lt;e&gt;
+[2] │ pineappl&lt;e&gt;
+[4] │ orang&lt;e&gt;</code></pre>
+</div>
+</div>
+<p>The following are other metacharacters that have special meanings and so are reserved:</p>
+<p><code>* \ + $ { }  [ ]   ^ ? .</code></p>
+<p>For instance, a period matches any single character:</p>
+<p><code>gr.y</code> matches <code>gray</code>, <code>grey</code>, <code>gr9y</code>, <code>grEy</code>, etc.</p>
+<p>and * indicates <strong>zero or more</strong> instances of the preceding character:</p>
+<p><code>xy*z</code> matches <code>xz</code>, <code>xyz</code>, <code>xyyz</code>, <code>xyyyz</code>, <code>xyyyyz</code>, etc.</p>
+<p>To detect the letter “a” followed by 0 or more occurrences of “p”, type:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(fruits, <span class="st">"ap*"</span>)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;app&gt;le
+[2] │ pine&lt;app&gt;le
+[3] │ Pe&lt;a&gt;r
+[4] │ or&lt;a&gt;nge
+[5] │ pe&lt;a&gt;ch
+[6] │ b&lt;a&gt;n&lt;a&gt;n&lt;a&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fruits, <span class="st">"ap*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `str_view_all()` was deprecated in stringr 1.5.0.
+ℹ Please use `str_view()` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;app&gt;le
+[2] │ pine&lt;app&gt;le
+[3] │ Pe&lt;a&gt;r
+[4] │ or&lt;a&gt;nge
+[5] │ pe&lt;a&gt;ch
+[6] │ b&lt;a&gt;n&lt;a&gt;n&lt;a&gt;</code></pre>
+</div>
+</div>
+<p>Compare this to</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(fruits, <span class="st">"ap+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;app&gt;le
+[2] │ pine&lt;app&gt;le</code></pre>
+</div>
+</div>
+<p>The “+” after the “p” indicates that we want <strong>one or more</strong> occurrences of “p.”</p>
+<p>Here is a more complex pattern:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(fruits, <span class="st">"^a(.*)e$"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;apple&gt;</code></pre>
+</div>
+</div>
+<p>The anchors <code>^</code> and <code>$</code> are used to indicate we want strings that begin with the letter a and end with e. The <code>(.*)</code> indicates that we want to match 0 or more occurrences of any character. In particular, parentheses can be used to group parts of the pattern for readability.</p>
+</section>
+<section id="example" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Example</h1>
+<p>Suppose we want to extract information on 10 digit United States phone numbers from a text file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="st">"Home: 507-645-5489"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>a2 <span class="ot">&lt;-</span> <span class="st">"Cell: 219.917.9871"</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>a3 <span class="ot">&lt;-</span> <span class="st">"My work phone is 507-202-2332"</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>a4 <span class="ot">&lt;-</span> <span class="st">"I don't have a phone"</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> <span class="fu">c</span>(a1, a2, a3, a4)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Home: 507-645-5489"            "Cell: 219.917.9871"           
+[3] "My work phone is 507-202-2332" "I don't have a phone"         </code></pre>
+</div>
+</div>
+<p>We will now extract just the phone numbers from this string.</p>
+<p>The area code must start with a 2 or higher so we use brackets again to indicate a range: [2-9]. The next two digits can be between 0 and 9, so we write [0-9]{2} where the number inside the curly braces indicates the number of times the term in brackets should appear. For the separator, we use [-.] to indicate either a dash or a period. The complete regular expression is given below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>phone <span class="ot">&lt;-</span> <span class="st">"([2-9][0-9]{2})[-.]([0-9]{3})[-.]([0-9]{4})"</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(info, phone)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ Home: &lt;507-645-5489&gt;
+[2] │ Cell: &lt;219.917.9871&gt;
+[3] │ My work phone is &lt;507-202-2332&gt;</code></pre>
+</div>
+</div>
+<p>Again, <code>str_view</code> just shows visually the presence or absence of the pattern in question. Instead, let’s see how we could extract the phone numbers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(info, phone)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "507-645-5489" "219.917.9871" "507-202-2332" NA            </code></pre>
+</div>
+</div>
+<p>Let’s anonymize the phone-numbers!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(info, phone, <span class="st">"XXX-XXX-XXXX"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Home: XXX-XXX-XXXX"            "Cell: XXX-XXX-XXXX"           
+[3] "My work phone is XXX-XXX-XXXX" "I don't have a phone"         </code></pre>
+</div>
+</div>
+<p>Or better, just anonymize the last 4 digits:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>last4 <span class="ot">&lt;-</span> <span class="st">"[0-9]{4}$"</span> <span class="co">#Create the regexp for last 4 numbers</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(info, last4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ Home: 507-645-&lt;5489&gt;
+[2] │ Cell: 219.917.&lt;9871&gt;
+[3] │ My work phone is 507-202-&lt;2332&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(info, last4, <span class="st">"XXXX"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Home: 507-645-XXXX"            "Cell: 219.917.XXXX"           
+[3] "My work phone is 507-202-XXXX" "I don't have a phone"         </code></pre>
+</div>
+</div>
+<p><strong>Question 9:</strong> Can you use <code>str_replace_all</code> to replace all the periods by dash characters?</p>
+</section>
+<section id="remarks" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Remarks</h1>
+<ol type="1">
+<li>As we noted above, certain characters are reserved. If we want to actually reference them in a regular expression, either put them within a bracket, or use a double forward slash.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_locate</span>(info, <span class="st">"[.]"</span>)  <span class="co">#find first instance of period</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     start end
+[1,]    NA  NA
+[2,]    10  10
+[3,]    NA  NA
+[4,]    NA  NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_locate</span>(info, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>)  <span class="co">#same</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     start end
+[1,]    NA  NA
+[2,]    10  10
+[3,]    NA  NA
+[4,]    NA  NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_locate</span>(info, <span class="st">"."</span>)    <span class="co">#first instance of any character</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     start end
+[1,]     1   1
+[2,]     1   1
+[3,]     1   1
+[4,]     1   1</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Metacharacters have different meanings within brackets.</li>
+</ol>
+<p>For example, the caret character “^” indicates the starting point outside brackets but negation inside.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fruits, <span class="st">"^[Pp]"</span>)  <span class="co">#starts with 'P' or 'p'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE  TRUE FALSE  TRUE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fruits, <span class="st">"[^Pp]"</span>)  <span class="co">#any character except 'P' or 'p'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fruits, <span class="st">"^[^Pp]"</span>) <span class="co">#start with any character except 'P' or 'p'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE  TRUE FALSE  TRUE</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p>See the summary of regular expressions posted on <a href="https://moodle.kzoo.edu/mod/resource/view.php?id=357918">Moodle</a>. This is a much more manageable (but still extensive!) set of regexp expressions as an alternative the the RStudio Cheat Sheet.</p></li>
+<li><p>Matching brackets or html tags</p></li>
+</ol>
+<p>In some situations, you may want to match brackets such as [8] or html tags such as <code>&lt;table&gt;</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"abc[8]"</span>, <span class="st">"abc[9][20]"</span>, <span class="st">"abc[9]def[10][7]"</span>, <span class="st">"abc[]"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "abc[8]"           "abc[9][20]"       "abc[9]def[10][7]" "abc[]"           </code></pre>
+</div>
+</div>
+<p>In order to better understand what regular expressions are matching here, we will replace pieces of the above strings with the character “X”.</p>
+<p>To match the left bracket, we write <code>\\[</code>. Next we want to match 0 or more occurrences of any character except the right bracket so we need <code>[^]]*</code> (remember what the caret does inside brackets?). Finally, to match the right bracket <code>\\]</code>. The parentheses are used to group parts of the expression and improve readability. The <code>str_replace_all()</code> command shows how the matched text could be replaced.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(out,  <span class="st">"</span><span class="sc">\\</span><span class="st">[([^]]*)</span><span class="sc">\\</span><span class="st">]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ abc&lt;[8]&gt;
+[2] │ abc&lt;[9]&gt;&lt;[20]&gt;
+[3] │ abc&lt;[9]&gt;def&lt;[10]&gt;&lt;[7]&gt;
+[4] │ abc&lt;[]&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(out, <span class="st">"</span><span class="sc">\\</span><span class="st">[([^]]*)</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">"X"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "abcX"      "abcXX"     "abcXdefXX" "abcX"     </code></pre>
+</div>
+</div>
+<p>Compare this to</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(out, <span class="st">"</span><span class="sc">\\</span><span class="st">[(.*)</span><span class="sc">\\</span><span class="st">]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ abc&lt;[8]&gt;
+[2] │ abc&lt;[9][20]&gt;
+[3] │ abc&lt;[9]def[10][7]&gt;
+[4] │ abc&lt;[]&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(out, <span class="st">"</span><span class="sc">\\</span><span class="st">[(.*)</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">"X"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "abcX" "abcX" "abcX" "abcX"</code></pre>
+</div>
+</div>
+<p>In this case, we match the first left bracket (indicated by the <code>\\[</code>), followed by 0 or more instances of <em>any</em> character (the (.*) portion), which could be a right bracket until the final right bracket <code>\\]</code>.</p>
+</section>
+<section id="on-your-own" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> On your own</h1>
+<ol type="1">
+<li>Create a vector <code>veggies</code> containing “carrot”, “bean”, “peas”, “cabbage”, “scallion”, “asparagus”.</li>
+</ol>
+<ul>
+<li>Find those strings that contain the pattern “ea”.</li>
+</ul>
+<ul>
+<li>Find those strings that end in “s”.</li>
+</ul>
+<ul>
+<li>Find those strings that contain at least two “a”’s.</li>
+</ul>
+<ul>
+<li>Find those strings that begin with any letter except “c”.</li>
+</ul>
+<ul>
+<li>Find the starting and ending position of the pattern “ca” in each string.</li>
+</ul>
+<ol start="2" type="1">
+<li>The regular expression <code>"^[Ss](.*)(t+)(.+)(t+)"</code> matches “scuttlebutt”, “Stetson”, and “Scattter”, but not “Scatter.” Why?</li>
+</ol>
+</section>
+<section id="more-resources" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> More Resources</h1>
+<ul>
+<li><a href="Regular%20expressions%20with%20R">http://www.regular-expressions.info/rlanguage.html</a></li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
