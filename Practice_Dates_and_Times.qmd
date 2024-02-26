@@ -6,7 +6,6 @@ format:
   html:
     toc: true
     toc_depth: 2
-    number-sections: true
     theme: united
 ---
 
@@ -140,7 +139,7 @@ work.  In which month(s) did the Lakers play the most/least games?
 
 
 
-## Distribution of Plays Througought the Game  
+# 2. Distribution of Plays Througought the Game  
 
 Now let's look at the play level data to see how the the plays are distributed throughout the game. The **lakers** data set lists as *time* the time that appears on the game clock for each play. These times begin at the beginning of the period (at 12:00) and count down to 00:00 at the end of the period. The first two digits show the minutes remaining while the last two digits show the number of seconds remaining. 
 
