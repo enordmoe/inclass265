@@ -15,6 +15,7 @@ execute:
 
 # Introduction
 
+
 In this tutorial we will make **choropleth maps**, sometimes called heat maps, using the `ggplot2` package. [Here](https://www.washingtonpost.com/blogs/worldviews/files/2013/03/openness2.jpg) is a typical though very intriguing example from the Washington Post and [here](https://www.google.com/url?sa=i&url=https%3A%2F%2Ftimogrossenbacher.ch%2Fbivariate-maps-with-ggplot2-and-sf%2F&psig=AOvVaw2XFo60WW7PFJ1nlqGs9n7n&ust=1709298387955000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCID-4evO0IQDFQAAAAAdAAAAABAY) is a particularly beautiful example by Timo Grossenbacher. A choropleth map is a map that shows a geographic landscape with units such as countries, states, or watersheds where each unit is colored according to a variable of interest. 
 
 We start by loading the **tidyverse**  and **maps** packages. The **maps** package simply contains several simple data files that allow us to create maps. 
