@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Your Name Here">
+
+<title>Practice with Joins in the Tidyverse</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practice_joins_tutorial_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practice_joins_tutorial_files/libs/quarto-html/quarto.js"></script>
+<script src="practice_joins_tutorial_files/libs/quarto-html/popper.min.js"></script>
+<script src="practice_joins_tutorial_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practice_joins_tutorial_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practice_joins_tutorial_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practice_joins_tutorial_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practice_joins_tutorial_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practice_joins_tutorial_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practice_joins_tutorial_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#example-data-tables" id="toc-example-data-tables" class="nav-link" data-scroll-target="#example-data-tables"><span class="header-section-number">2</span> Example data tables</a></li>
+  <li><a href="#joining-data-tables" id="toc-joining-data-tables" class="nav-link" data-scroll-target="#joining-data-tables"><span class="header-section-number">3</span> Joining data tables</a>
+  <ul class="collapse">
+  <li><a href="#inner_join" id="toc-inner_join" class="nav-link" data-scroll-target="#inner_join"><span class="header-section-number">3.1</span> <code>inner_join()</code></a></li>
+  <li><a href="#left_join" id="toc-left_join" class="nav-link" data-scroll-target="#left_join"><span class="header-section-number">3.2</span> <code>left_join()</code></a></li>
+  <li><a href="#right_join" id="toc-right_join" class="nav-link" data-scroll-target="#right_join"><span class="header-section-number">3.3</span> <code>right_join()</code></a></li>
+  <li><a href="#full_join" id="toc-full_join" class="nav-link" data-scroll-target="#full_join"><span class="header-section-number">3.4</span> <code>full_join()</code></a></li>
+  <li><a href="#semi_join" id="toc-semi_join" class="nav-link" data-scroll-target="#semi_join"><span class="header-section-number">3.5</span> <code>semi_join()</code></a>
+  <ul class="collapse">
+  <li><a href="#inner_join-vs.-semi_join" id="toc-inner_join-vs.-semi_join" class="nav-link" data-scroll-target="#inner_join-vs.-semi_join"><code>inner_join</code> vs.&nbsp;<code>semi_join</code></a></li>
+  </ul></li>
+  <li><a href="#anti_join" id="toc-anti_join" class="nav-link" data-scroll-target="#anti_join"><span class="header-section-number">3.6</span> <code>anti_join()</code></a></li>
+  </ul></li>
+  <li><a href="#common-complications" id="toc-common-complications" class="nav-link" data-scroll-target="#common-complications"><span class="header-section-number">4</span> Common complications</a></li>
+  <li><a href="#on-your-own" id="toc-on-your-own" class="nav-link" data-scroll-target="#on-your-own"><span class="header-section-number">5</span> On Your Own</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources"><span class="header-section-number">6</span> Additional Resources</a></li>
+  <li><a href="#acknowledgement" id="toc-acknowledgement" class="nav-link" data-scroll-target="#acknowledgement"><span class="header-section-number">7</span> Acknowledgement</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Practice with Joins in the Tidyverse</h1>
+<p class="subtitle lead">Chapter 19</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your Name Here </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>There are many situations where data sets are broken into multiple tables, and multiple reasons that this might make sense. Sometimes it is easier to collect data in different pieces, other times it is to reduce the file size. Regardless of the reason for splitting data sets into multiple tables, they should always be formatted in such a way that there is at least one common column between the tables so that they can be merged as needed. In this tutorial, we will explore how to use the <code>join</code> functions described in Chapter 19 of the R4DS text to merge these data tables.</p>
+<p>All datasets needed for this tutorial are stored in the “data” subdirectory of the <strong>inclass265</strong> repository.</p>
+<p><strong>Note</strong>: In the <strong>tidyverse</strong>, most tabular sets of data are <strong>data frames</strong> stored as <strong>tibbles</strong>. Data frames can store objects of different classes (e.g.&nbsp;some columns can be text and other columns can be integers). A synonymous term is <strong>data table</strong>, which is used by some textbooks and other languages, such as the structured query language (SQL).</p>
+<p>To begin, let’s ensure that the <strong>tidyverse</strong> packages are loaded.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-1_cfb404bb5e231b55113df1d2ab9279b1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-data-tables" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Example data tables</h1>
+<p>To illustrate the different <code>join</code> functions we will use a small example of a customer database. We will focus on two tables: <strong>orders</strong> which contains the order number, customer ID, and date of the order; and <strong>customers</strong> which contains the customer ID and customer name. These are intentionally small data tables so that is easier to see how the <code>join</code> statements are working.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-2_498fc85bbf7731c5d6ff2aa473492736">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>orders <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/orders.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>orders</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  order    id date  
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+1     1     4 Jan-01
+2     2     8 Feb-01
+3     3    42 Apr-15
+4     4    50 Apr-17</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-3_31cdcc1f0ba8f1983f327b17b34d69b3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>customers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/customers.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>customers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+     id name   
+  &lt;dbl&gt; &lt;chr&gt;  
+1     4 Tukey  
+2     8 Wickham
+3    15 Mason  
+4    16 Jordan 
+5    23 Patil  
+6    42 Cox    </code></pre>
+</div>
+</div>
+</section>
+<section id="joining-data-tables" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Joining data tables</h1>
+<p>The <code>dplyr</code> package provides six different <code>join</code> functions, each merges two data tables together in a different way. The best way to understand these functions is to see how each works in our small example.</p>
+<p>All of the functions have the same three arguments:</p>
+<table class="table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 88%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>argument</th>
+<th>explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>x</code></td>
+<td>the first (left) table to join</td>
+</tr>
+<tr class="even">
+<td><code>y</code></td>
+<td>the second (right) table to join</td>
+</tr>
+<tr class="odd">
+<td><code>by</code></td>
+<td>a character vector of variables to join by, notice that the column name must always be in quotes.</td>
+</tr>
+</tbody>
+</table>
+<section id="inner_join" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="inner_join"><span class="header-section-number">3.1</span> <code>inner_join()</code></h2>
+<p><code>inner_join</code> creates a new table which is restricted to cases where the values of “by variable” exist in <em>both</em> data sets. <em>All</em> columns from both data sets are returned for these cases.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-4_ca2238d777929a4f9c8138870d40712e">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  order    id date   name   
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  
+1     1     4 Jan-01 Tukey  
+2     2     8 Feb-01 Wickham
+3     3    42 Apr-15 Cox    </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>In this <code>inner_join</code>, we lose the row for order 4 from the <strong>orders</strong> table because customer 50 does not appear in the <strong>customers</strong> data table. We also lose orders 15, 16 and 23 from the <strong>customers</strong> table. Note the columns order, date and name are also returned. Any excess variables included after the join can be removed via a <code>select()</code> command if needed.</p>
+</section>
+<section id="left_join" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="left_join"><span class="header-section-number">3.2</span> <code>left_join()</code></h2>
+<p><code>left_join</code> returns all cases from the <code>x</code> data table, regardless of whether there are matching values of the <code>join_by()</code> variable(s) in <code>y</code>. I think of this as a very common kind of “lookup.” If the lookup table doesn’t include a value for the <code>join_by()</code> variable, an NA value is generated. <em>All</em> columns from both data tables are returned for these cases.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-5_7af8866b3cfc37fd118aedd88c3a9eaa">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  order    id date   name   
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  
+1     1     4 Jan-01 Tukey  
+2     2     8 Feb-01 Wickham
+3     3    42 Apr-15 Cox    
+4     4    50 Apr-17 &lt;NA&gt;   </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>This new data frame now includes the <code>name</code> column. Since customer 50 does not appear in the <strong>customers</strong> data table, an <code>NA</code> (missing value) is used for their name.</p>
+</section>
+<section id="right_join" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="right_join"><span class="header-section-number">3.3</span> <code>right_join()</code></h2>
+<p><code>right_join</code> returns all cases from the <code>y</code> data table, regardless of whether there are matching values of the <code>by</code> variable(s) in <code>x</code>. All columns from both data tables are returned for these cases. Note the rows are ordered by the order of the right-hand (<code>customers</code>) data table.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-6_cd2dff1c2f4a86d0bcf9b569cbdd0e7e">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">right_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  order    id date   name   
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  
+1     1     4 Jan-01 Tukey  
+2     2     8 Feb-01 Wickham
+3     3    42 Apr-15 Cox    
+4    NA    15 &lt;NA&gt;   Mason  
+5    NA    16 &lt;NA&gt;   Jordan 
+6    NA    23 &lt;NA&gt;   Patil  </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>We have added the <code>order</code> and <code>date</code> columns to the <strong>customers</strong> data table. Customers 15, 16, and 23 did not make purchases during this time frame, so missing values (<code>NA</code>s) are used for their <code>order</code> and <code>date</code> values.</p>
+</section>
+<section id="full_join" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="full_join"><span class="header-section-number">3.4</span> <code>full_join()</code></h2>
+<p><code>full_join</code> returns all rows and columns from both <code>x</code> and <code>y</code>.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-7_db2cfb35c201a4a8c19b6dcae50fe825">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">full_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  order    id date   name   
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  
+1     1     4 Jan-01 Tukey  
+2     2     8 Feb-01 Wickham
+3     3    42 Apr-15 Cox    
+4     4    50 Apr-17 &lt;NA&gt;   
+5    NA    15 &lt;NA&gt;   Mason  
+6    NA    16 &lt;NA&gt;   Jordan 
+7    NA    23 &lt;NA&gt;   Patil  </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>We have fully merged the <strong>orders</strong> and <strong>customers</strong> data tables; thus, we get all of the columns and all of the rows from both data tables. <code>NA</code>s fill in the necessary values for customers not making purchases and for orders without a customer record.</p>
+</section>
+<section id="semi_join" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="semi_join"><span class="header-section-number">3.5</span> <code>semi_join()</code></h2>
+<p><code>semi_join</code> is a filtering join that returns all rows from the <code>x</code> data table where there are matching values of the <code>by</code> variable(s) in <code>y</code>, and only the columns from <code>x</code>.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-8_0ef6526fe907cda74cdba76fbb99588d">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semi_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  order    id date  
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+1     1     4 Jan-01
+2     2     8 Feb-01
+3     3    42 Apr-15</code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>We lose the row for order 4 because customer 50 does not appear in the <strong>customers</strong> data table.</p>
+<section id="inner_join-vs.-semi_join" class="level3">
+<h3 class="anchored" data-anchor-id="inner_join-vs.-semi_join"><code>inner_join</code> vs.&nbsp;<code>semi_join</code></h3>
+<p>Above, the <code>inner_join</code> and <code>semi_join</code> returned the same number of rows, but this will not always be the case. For example, suppose that customer 42 also placed an order on May-01 so that we have multiple orders from the same customer.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-9_6bb09863203bfe151d6db6fa2d3756f0">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>extra_order <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">order =</span> <span class="dv">5</span>, <span class="at">id =</span> <span class="dv">42</span>, <span class="at">date =</span> <span class="st">"May-01"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>extra_order</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  order id   date
+1     5 42 May-01</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>orders2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(orders, extra_order)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>orders2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  order    id date  
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+1     1     4 Jan-01
+2     2     8 Feb-01
+3     3    42 Apr-15
+4     4    50 Apr-17
+5     5    42 May-01</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-10_13b23d7bd0afcfd1d6f05249c8931865">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(<span class="at">x =</span> customers, <span class="at">y =</span> orders2, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+     id name    order date  
+  &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; 
+1     4 Tukey       1 Jan-01
+2     8 Wickham     2 Feb-01
+3    42 Cox         3 Apr-15
+4    42 Cox         5 May-01</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-11_428ae8bee7ace33c84585a7dd7bdfca6">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semi_join</span>(<span class="at">x =</span> customers, <span class="at">y =</span> orders2, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+     id name   
+  &lt;dbl&gt; &lt;chr&gt;  
+1     4 Tukey  
+2     8 Wickham
+3    42 Cox    </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>The result of the <code>inner_join</code> includes two rows for customer 42 because <code>inner_join</code> returns all of the columns from both data tables for <code>id</code>s that match. The result of the <code>semi_join</code> only returns one row for each customer because it only returns the rows from <strong>customers</strong> that have matching <code>ids</code> in <strong>orders2</strong>.</p>
+</section>
+</section>
+<section id="anti_join" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="anti_join"><span class="header-section-number">3.6</span> <code>anti_join()</code></h2>
+<p><code>anti_join</code> returns all rows from the <code>x</code> data table where there are <em>not</em> matching values of the <code>by</code> variable(s) in <code>y</code>, and only the columns from <code>x</code>.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-12_ec169e9222a293572e6a9dc6d5589d5c">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(<span class="at">x =</span> orders, <span class="at">y =</span> customers,<span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  order    id date  
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; 
+1     4    50 Apr-17</code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>Order 4 is the only order from a customer without a record in the <strong>customers</strong> data table, so it is the only row of <strong>orders</strong> returned.</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-13_20c45a7d212b260594bf1c968eba541e">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(<span class="at">x =</span> customers, <span class="at">y =</span> orders, <span class="fu">join_by</span>(id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+     id name  
+  &lt;dbl&gt; &lt;chr&gt; 
+1    15 Mason 
+2    16 Jordan
+3    23 Patil </code></pre>
+</div>
+</div>
+<p><strong>Remark</strong></p>
+<p>Customers 15, 16, and 23 did not place orders during this time frame, so their entries from the <strong>customers</strong> data table are returned.</p>
+</section>
+</section>
+<section id="common-complications" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Common complications</h1>
+<p>All of our examples have only used a single column to match the entries between the data tables, and have also assumed that the columns will have identical names. This will not always be the case. Below we detail how to refine what variables you merge by.</p>
+<ul>
+<li><p>If you want to join by multiple variables, then you need to specify a vector of variable names: <code>join_by(var1, var2, var3)</code>. Here all three columns must match in both tables.</p></li>
+<li><p>If you want to use all variables that appear in both tables, then you can leave the <code>by</code> argument blank with no <code>join_by()</code> such as just <code>left_join(x, y)</code></p></li>
+<li><p>A common situation is that the variable you wish to join by is not named identically in both tables. In this case, you specify the mapping as in <code>join_by(left_var = right_var)</code> to identify the linkage to be made.</p></li>
+</ul>
+<p>Another issue that crops up occasionally is duplicate entries in the variable(s) that you wish to merge by. We saw one example of this above when there were two orders from the same customer. In that case the <code>id</code> value was unique in the <strong>customer</strong> table, but not in the <strong>orders</strong> table. The result of this join is quite logical, as seen above. If, however, both tables contain duplicate entries in the variable(s) that you wish to merge by, all possible combinations of these entries are returned. A simple example for a <code>full_join</code> is shown below:</p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-14_fb81ebf074bea2579801c5be14f3b69a">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating example data frames</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">key =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>), <span class="at">var =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>table1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  key     var
+  &lt;chr&gt; &lt;int&gt;
+1 a         1
+2 a         2
+3 b         3
+4 b         4
+5 c         5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">key =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>), <span class="at">var =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>table2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  key   var  
+  &lt;chr&gt; &lt;chr&gt;
+1 a     A    
+2 a     B    
+3 b     C    
+4 b     D    
+5 c     E    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A full join</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">full_join</span>(<span class="at">x =</span> table1, <span class="at">y =</span> table2, <span class="fu">join_by</span>(key))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  key   var.x var.y
+  &lt;chr&gt; &lt;int&gt; &lt;chr&gt;
+1 a         1 A    
+2 a         1 B    
+3 a         2 A    
+4 a         2 B    
+5 b         3 C    
+6 b         3 D    
+7 b         4 C    
+8 b         4 D    
+9 c         5 E    </code></pre>
+</div>
+</div>
+<p>In this situation, the results for <code>left_join</code>, <code>right_join</code>, and <code>full_join</code> will be identical.</p>
+</section>
+<section id="on-your-own" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> On Your Own</h1>
+<p>The files <code>books.csv</code>, <code>authors.csv</code>, and <code>book_authors.csv</code> give details about the summer reading of a statistics student. <code>books.csv</code> provides details for each book (isbn, title, year, and genre), <code>authors.csv</code> provides details about each author (authorid, first name, last name, and nationality), and <code>book_authors.csv</code> provides the author identification (<code>authorid</code>) for each isbn (books with multiple authors will have multiple rows).</p>
+<ol type="1">
+<li>Use <code>read_csv()</code> to read the three files into R, naming them <strong>books</strong>, <strong>authors</strong>, and <strong>book_authors</strong>.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol start="2" type="1">
+<li>Use the appropriate <code>join</code> statement to add the ISBNs to the <strong>authors</strong> data table. Why does the resulting data frame have 31 rows instead of 11?</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol start="3" type="1">
+<li>To eliminate the duplicate rows of your data frame from #2 (which we’ll assume you named <strong>df2</strong>) run the following code (change the object names to align with your code as necessary):</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<div class="cell" data-hash="practice_joins_tutorial_cache/html/unnamed-chunk-17_9e7e98a9413cead79aad3272aad4072e">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment the next line to run it.</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># df2 &lt;- unique(df2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Use the appropriate <code>join</code> statement to add the author information table from #3 to the <strong>books</strong> data table.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol start="5" type="1">
+<li>Are there any authors in the <strong>authors</strong> data table that do not correspond to books in the <strong>books</strong> data table? Use an appropriate join statement to determine this.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol start="6" type="1">
+<li>After reading <em>A Game of Thrones</em>, the student decides to read the rest of the series over the summer. The file <code>books2.csv</code> contains the updated books on the student’s reading list. Read this file into R, naming it <strong>books2</strong>.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol start="7" type="1">
+<li>Use the same join statement that you used in #4, but using <strong>books2</strong> rather than <strong>books</strong>.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+</section>
+<section id="additional-resources" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Additional Resources</h1>
+<ul>
+<li><p><a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf">RStudio’s data transformation cheat sheet</a> provides a summary of commands used to combine data sets.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html"><code>dplyr</code> vignette on two table verbs</a> provides additional examples of merging data tables.</p></li>
+</ul>
+</section>
+<section id="acknowledgement" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Acknowledgement</h1>
+<div class="footnote">
+<p>Source: Tutorial adapted from <a href="https://github.com/ds4stats/r-tutorials">R Tutorials in Data Science</a>.</p>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
