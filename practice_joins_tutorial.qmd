@@ -203,7 +203,7 @@ All of our examples have only used a single column to match the entries between 
 
 * If you want to use all variables that appear in both tables, then you can leave the `by` argument blank with no `join_by()` such as just `left_join(x, y)`  
 
-* A common situation is that the variable you wish to join by is not named identically in both tables. In this case,  you specify the mapping as in  `join_by(left_var = right_var)` to identify the linkage to be made.  
+* A common situation is that the variable you wish to join by is not named identically in both tables. In this case,  you specify the mapping as in  `join_by(left_var == right_var)` to identify the linkage to be made.  
 
 
 Another issue that crops up occasionally is duplicate entries in the variable(s) that you wish to merge by. We saw one example of this above when there were two orders from the same customer. In that case the `id` value was unique in the **customer** table, but not in the **orders** table. The result of this join is quite logical, as seen above. If, however, both tables contain duplicate entries in the variable(s) that you wish to merge by, all possible combinations of these entries are returned. A simple example for a `full_join` is shown below:
