@@ -17,7 +17,7 @@ execute:
 # 1. Scraping Population Data from Wikipedia
 
 
-Data on the web are often presented in tables. For instance, we can see a list of countries by population in 1900 on [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_population_in_1900)
+Data on the web are often presented in tables. For instance, we can see a list of countries by population in 2000 on [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2000)
 
 
 Web pages are written in HTML (Hyper Text Markup Language) which uses **tags** to describe different aspects of document content. For example, a heading in a document is indicated by `<h1>My Title</h1>` whereas a paragraph would be indicated by `<p>A paragraph of content...</p>`. 
@@ -36,7 +36,7 @@ library(janitor)
 ## a) Reading data into R with `rvest`
 
 
-To get the population data on [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_population_in_1900) into R, we use the `read_html` command from the `xml2` package (which is attached when `rvest` is called) to parse the page to obtain an HTML document. 
+To get the population data on [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2000) into R, we can use the `read_html` command from the `xml2` package (which is attached when `rvest` is called) to parse the page to obtain an HTML document. 
 
 
 We then use the `html_nodes` command that extracts all occurrences of the desired tag. We will be interested in scraping data presented in tables, so in the source code, we look for the table tag: `<table> ... </table>`.
@@ -54,14 +54,14 @@ str(popParse)
 The `read_html` command creates an R object, basically a list, that stores information about the web page.
 
 
-To extract a table from this web page (this may take some time):
+To extract a table from this web page:
 
 
 ```{r}
 popNodes <- html_nodes(popParse, "table")
 popNodes
 ```
-There are several tables in this document. By inspecting the output of `popNodes`, we make a guess that we want the seventh table. (Trial and error may be required.) We select the seventh table by using double brackets because we want the content of the 7th item from a list (more on R lists soon):
+There are several tables in this document. By inspecting the output of `popNodes`, we might make a guess that we want the third table. (Trial and error may be required.) We select the third table by using double brackets because we want the content of the 3rdh item from a list (more on R lists soon):
 
 
 ```{r}
@@ -98,8 +98,7 @@ df
 ```
 
 
-
-
+This approach depends on finding a highly structured table to scrape. An alternative approach described in R4DS and often more successful is making use of CSS selectors found in html documents that use of cascading style sheets (CSS).  The following examples illustrate this approach.
 
 
 
@@ -111,7 +110,7 @@ df
 The web site [Box Office Mojo](http://www.boxofficemojo.com) gives statistics on box office earnings of movies. In addition to daily earnings, the web site also maintains lists of yearly and all time record holders.
 
 
-We will look at the movies in the top 100 in all time movie worldwide grosses in box office receipts. In particular, we will scrape the data from [Box Office Mojo: All Time Box Office](http://www.boxofficemojo.com/alltime/world/?pagenum=1). The dollar amounts are in millions of dollars and the years marked with "^" indicate that the movie had multiple releases.
+We will look at the movies in the top 200 in all time movie worldwide grosses in box office receipts. In particular, we will scrape the data from [Box Office Mojo: All Time Box Office](http://www.boxofficemojo.com/alltime/world/?pagenum=1). The dollar amounts are in millions of dollars and the years marked with "^" indicate that the movie had multiple releases.
 
 
 ```{r}
@@ -176,38 +175,17 @@ str(moviedata)
 
 
 
-#  A Billboard Top 100 example: Using the SelectorGadget
-
-The website [billboard.com](http://www.billboard.com)
-keeps track of top songs, albums and artists from the music industry.
 
 
-One page lists the hot 100 artists. In the source code, here is the listing for my favorite artists, BTS:
-`<div class="chart-list-item   piano-content-overlay__gated-item" data-rank="17" data-artist="" data-title="BTS" data-has-content="true">`.
-
-We can use SelectorGadget to verify that the best css selector is ".chart-list-item__title". Use the pipe to access the list of artists and use `trim = TRUE` in `html_text()` to clean up the text extracted from the node. 
-
-```{r}
-billboard <- read_html("https://www.billboard.com/charts/artist-100")
-
-artist <- billboard %>% 
-  html_nodes(".chart-list-item__title") %>%
-  html_text(trim = TRUE)
-
-head(artist)
-```
-
-Try another Billboard top 100 list to see if you can adapt this technique to a similar page.
+#  On Your Own
 
 
-# 4.  On Your Own
+1. The web site [NY Times Best Sellers: Hardcover Fiction](http://www.nytimes.com/books/best-sellers/hardcover-fiction) contains a list of best-selling fiction books. Scrape the names, authors, publishers and weeks on the list (`parse_number()`?) of these top books. Use SelectorGadget to obtain the appropriate css selector. 
+
+2. The web site [BikeRaceInfo](http://www.bikeraceinfo.com/tdf/tdfstats.html) has a table with data on past winners of the Tour de France. Use the methods shown above using Wikipedia to create a cleaned-up data frame of this data for the subtable for races between 1903 and 1959. This will require several steps and likely involve splitting columns after the basic extraction. (If you prefer, you could try using the selector gadget but the table structure of this page suggests using the table approach shown above for Wikipedia.)
 
 
-* The web site [BikeRaceInfo](http://www.bikeraceinfo.com/tdf/tdfstats.html) has a table with data on past winners of the Tour de France. Create a cleaned-up data frame of this data.
 
-* The web site [NY Times Best Sellers: Hardcover Fiction](http://www.nytimes.com/books/best-sellers/hardcover-fiction) contains a list of best-selling fiction books. Scrape the names of these top books. Use SelectorGadget to obtain the appropriate css selector. 
-
-
-# 5. Resources
+# Resources
 
 * [HTML Tutorial](www.w3schools.com)
