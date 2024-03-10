@@ -1,5 +1,5 @@
 ---
-title: "Chapter 13: Numbers"
+title: "Chapter 26: Iteration"
 subtitle: "Introduction to Data Science"
 author: "MATH 265"
 format: 
@@ -24,11 +24,13 @@ chiflights2020 <- read_csv("https://people.kzoo.edu/enordmoe/math265/data/chifli
 
 # Outline
 
--   Going from strings to numbers
--   Fun with `count()`
--   Numeric transformations and `mutate()`
--   More ways to `mutate()`
--   Numeric summaries
+-   Modifying multiple columns
+    -   Movie data
+-   Applying functions `rowwise()`
+    -   Gradebook
+-   Reading multiple files and combining results
+    -   Gapminder Files
+-   
 
 # Going from strings to numbers
 
