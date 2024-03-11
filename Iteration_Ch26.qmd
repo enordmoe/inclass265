@@ -27,7 +27,7 @@ chiflights2020 <- read_csv("https://people.kzoo.edu/enordmoe/math265/data/chifli
 # Outline
 
 -   Modifying multiple columns
-    -   Movie data
+    -   Penguin data
 -   Applying functions `rowwise()`
     -   Gradebook
 -   Reading multiple files and combining results
@@ -244,7 +244,6 @@ grades_calc
 Note that the use of `c_across()` is necessary to make use of tidy select semantics such as `starts_with()`, etc.
 :::
 
-
 We use `sort()` rather than `arrange()` because we are sorting a vector rather than a data frame. The indexing with brackets allows us to drop the one or two lowest as needed after sorting.
 
 # Reading multiple files and combining results
@@ -298,7 +297,7 @@ files[[1]] # access one of the data files
 
 ### What binds us is `list_rbind()`
 
-Combine the list of tibbles into one large dataset with the **purrr** package function `list_rbind()`. 
+Combine the list of tibbles into one large dataset with the **purrr** package function `list_rbind()`.
 
 ```{r}
 onebigfile <- list_rbind(files)
@@ -306,13 +305,12 @@ onebigfile
 ```
 
 ::: callout-note
-Other useful functions to learn about are `list_cbind()` and `list_c()`. 
+Other useful functions to learn about are `list_cbind()` and `list_c()`.
 :::
 
 But there's a big problem in that we can no longer identify the year to which the case applies.
 
 We use `set_names(basename)` to extract the base file name with the identifying year information and attach it to the files list.
-
 
 ```{r}
 files <- paths |> 
@@ -334,7 +332,6 @@ write_csv(mybigdataframe, "gapminder.csv")
 ```
 
 Use `write_csv(df, file)` to write the R data frame `df` to a quoted file name.
-
 
 ::: callout-note
 R4DS discusses more complicated file/directory naming structures and how to deal with them using commands we have learned earlier (e.g. `separate_wider_delim`).
