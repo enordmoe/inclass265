@@ -8,7 +8,7 @@ format:
     toc_depth: 2
     number-sections: true
     number-depth: 2
-    theme: cerulean
+    theme: yeti
 execute: 
   warning: false
   cache: true
