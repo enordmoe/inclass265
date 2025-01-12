@@ -3,14 +3,15 @@ title: Data Transformation Part 1 Practice
 author: "Intro to Data Science"
 date: today
 format: 
-    gfm: 
+    html: 
       toc: true
       toc-depth: 2
       fig-height: 4
       fig-width: 9
-editor: visual
+      self-contained: true  # Embed all external dependencies
 execute: 
-  eval: false
+  eval: true
+code-tools: true  # Enable code tools, including the copy button
 ---
 
 ```{r}
@@ -46,7 +47,7 @@ mydata <- flights |>
   filter( month == 2, day == 14) 
 ```
 
-4)  Are the 2 filter commands above equivalent? If not, which do you prefer? What is the other one doing?
+4)  Are the 2 filter commands below equivalent? If not, which do you prefer? What is the other one doing?
 
 ```{r}
 flights |> 
@@ -113,36 +114,33 @@ flights |>
 
 13) What proportion of Delta flights into DTW were delayed?
 
+```{r}
+
+```
+
 14) How many flights were missing departure times? (Hint: Use the `is.na()` function.)
+
+```{r}
+
+```
 
 # `arrange()`
 
 **`arrange()`** to reorder rows of data
 
-## More flights data examples
-
-```{r}
-# order by year, then month within year, then day within month
-#   2nd column breaks ties in the 1st, etc.
-flights |> 
-  arrange(year, month, day)
-
-# get earliest departure time
-flights |> 
-  arrange(dep_time) 
-flights |> 
-  arrange(desc(dep_time))
-```
-
-16) What time was the earliest/latest departure?
+15) What time was the earliest/latest departure?
 
 ```{r}
 
 ```
 
-17) How are `NA` values sorted? This command displays the last few values and might be helpful: `tail(arrange(flights, desc(dep_time)))`
+16) How are `NA` values sorted? This command displays the last few values and might be helpful: `tail(arrange(flights, desc(dep_time)))`
 
-18) Find the top 10 longest flights based on time. Where did they all go? (Of course!)
+```{r}
+
+```
+
+17) Find the top 10 longest flights based on time. Where did they all go? (Of course!)
 
 ```{r}
 
@@ -152,33 +150,33 @@ flights |>
 
 **`distinct()`** to find all the unique rows in a dataset for the specified variable or combination of variables
 
-19) How many airplanes are represented by these flights?
-
-```{r}
-flights |> 
-  distinct(tailnum)
-```
-
-20) How many distinct routes are represented?
-
-```{r}
-flights |> 
-  distinct(origin, dest)
-```
-
-21) For how many airlines do we have flights?
+18) How many airplanes are represented by these flights?
 
 ```{r}
 
 ```
 
-22) What other examples can you think of for using `distinct()` here?
+
+19) How many distinct routes are represented?
 
 ```{r}
 
 ```
 
-23) Why might these be more useful than the commands above?
+
+20) For how many airlines do we have flights?
+
+```{r}
+
+```
+
+21) What other examples can you think of for using `distinct()` here?
+
+```{r}
+
+```
+
+22) Why might the following examples using `count()` be more useful than the commands using `distinct()` above?
 
 ```{r}
 flights |> 
@@ -192,3 +190,4 @@ flights |>
   count(origin, dest,sort = TRUE) |> 
   arrange(n)
 ```
+
