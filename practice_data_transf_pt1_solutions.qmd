@@ -1,0 +1,571 @@
+---
+title: Data Transformation Part 1 Practice
+author: "Intro to Data Science"
+date: today
+format: 
+    html: 
+      toc: true
+      toc-depth: 2
+      fig-height: 4
+      fig-width: 9
+      self-contained: true  # Embed all external dependencies
+execute: 
+  eval: true
+code-tools: true  # Enable code tools, including the copy button
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(nycflights13)  
+```
+
+**Note:** Never put the backwards tick marks in the body of the R chunks. I use them in the text here such as in `filter()`below so that the commands names are clearer after rendering.
+
+# `filter()`
+
+**`filter()`** picks observations by their values
+
+## Flights data examples
+
+```{r}
+# note the flights is a tibble - a data.frame that has been tweaked
+flights  
+# use View(flights) to see entire data set
+```
+
+1)  How do the variable types `int` and `dbl` differ? What is `TRUE + TRUE`?
+
+**Solution:**
+
+-   Differences between `int` and `dbl`:
+    -   `int`: Integer type, represents whole numbers.
+    -   `dbl`: Double type, represents decimal or floating-point numbers.
+-   `TRUE + TRUE` evaluates to `2` because `TRUE` is coerced to `1` in numeric operations.
+
+2)  Identify all the day and time variables. How are they stored?
+
+**Solution:**
+
+```{r}
+# Display column types for flights dataset
+glimpse(flights)
+```
+
+-   Day and time variables in the `flights` dataset:
+    -   `year`, `month`, `day`: Represent the date, stored as integers (`int`).
+    -   `dep_time`, `sched_dep_time`, `arr_time`, `sched_arr_time`: Represent times, stored as integers (`int`), formatted in HHMM (e.g., 1230 for 12:30 PM).
+    -   `air_time`: Represents flight duration in minutes, stored as a double (`dbl`).
+
+3)  What is the following doing?
+
+```{r}
+mydata <- flights |> 
+  filter( month == 2, day == 14) 
+```
+
+**Solution:**
+
+-   This code filters the `flights` dataset to include only rows where the flight departed on Valentine's Day, Feb 14. The cases are stored in a datsets called `mydata`.
+
+```{r}
+mydata <- flights |> 
+  filter(month == 2, day == 14)
+
+head(mydata)  # Display the first few rows of the filtered dataset
+```
+
+4)  Are the 2 filter commands above equivalent? If not, which do you prefer? What is the other one doing?
+
+```{r}
+flights |> 
+  filter(month == 1 | month == 2) 
+flights |> 
+  filter(month == 1 | 2)
+```
+
+**Solution:**
+
+## Solution to Question 4
+
+The two `filter` commands are **not equivalent**.
+
+-   **Command 1:** `filter(month == 1 | month == 2)` correctly filters rows where `month` is either 1 or 2.
+-   **Command 2:** `filter(month == 1 | 2)` is incorrect because `(month == 1 | 2)` evaluates as `(month == 1) | TRUE`, retaining all rows due to 2 being "truthy."
+
+Lesson learned. Use Command 1 for correct and explicit filtering. Command 2 leads to unintended results and should be avoided.
+
+5)  Use the blank chunk below to create 3 new data frames that include (a) flights going to Chicago Midway or O'Hare airport, (b) flights that were on time (not delayed), and (c) flights going to Chicago Midway or O'Hare airport that were on time. What percentage of flights going to either of these two airports (from NYC) were on time in 2013? (Hint: For now, you can do the percentage calculation by hand after finding the relevant numbers of rows.)
+
+```{r}
+
+```
+
+**Solution:**
+
+```{r}
+# (a) Flights going to Chicago Midway (MDW) or O'Hare (ORD)
+chicago_flights <- flights |> 
+  filter(dest %in% c("MDW", "ORD"))
+
+# (b) Flights that were on time (not delayed)
+on_time_flights <- flights |> 
+  filter(arr_delay <= 0)
+
+# (c) Flights going to Chicago Midway or O'Hare that were on time
+on_time_chicago_flights <- chicago_flights |> 
+  filter(arr_delay <= 0)
+
+# Count the number of rows in each data frame
+num_chicago_flights <- nrow(chicago_flights)
+num_on_time_chicago_flights <- nrow(on_time_chicago_flights)
+
+# Percentage of flights to Chicago that were on time
+percentage_on_time <- (num_on_time_chicago_flights / num_chicago_flights) * 100
+
+# Print results
+num_chicago_flights
+num_on_time_chicago_flights
+percentage_on_time
+```
+
+### More `filter()` examples:
+
+```{r}
+# all flights in the spring: March, April, or May
+flights |> 
+  filter(month == 3 | month == 4 | month == 5)
+flights |> 
+  filter(month %in% c(3, 4, 5)) 
+
+#  find all flights that left no more than a half hour after scheduled time
+flights |> 
+  filter(dep_delay <= 30)
+
+#  find all flights that left no more than a half hour after scheduled time and arrived early
+flights |> 
+  filter(dep_delay <= 30 , arr_delay < 0)  
+
+# two ways to find all flights not delayed by more than a half hour at either end
+flights |> 
+  filter(arr_delay <= 30, dep_delay <= 30)
+flights |> 
+  filter(!(arr_delay > 30 | dep_delay > 30))
+```
+
+6)  Find the flights that were more than 500 miles long and arrived early.
+
+```{r}
+
+```
+
+**Solutions:**
+
+```{r}
+# Flights more than 500 miles long and arrived early
+long_early_flights <- flights |> 
+  filter(distance > 500, arr_delay < 0)
+
+# Display the number of flights and preview the data
+nrow(long_early_flights)
+head(long_early_flights)
+```
+
+7)  Find the flights that departed after midnight but no later than 7am.
+
+```{r}
+
+```
+
+**Solutions:**
+
+```{r}
+# Flights that departed after midnight but no later than 7am
+early_morning_flights <- flights |> 
+  filter(dep_time > 0, dep_time <= 700)
+
+# Display the number of flights and preview the data
+nrow(early_morning_flights)
+head(early_morning_flights)
+```
+
+8)  Find the flights that departed between midnight and 8am inclusive.
+
+```{r}
+
+```
+
+**Solutions:**
+
+```{r}
+# Flights that departed between midnight and 8am inclusive
+midnight_to_8am_flights <- flights |> 
+  filter(dep_time >= 0, dep_time <= 800)
+
+# Display the number of flights and preview the data
+nrow(midnight_to_8am_flights)
+head(midnight_to_8am_flights)
+```
+
+9)  What's wrong with this command: `filter(flights, month = 3)` ?
+
+**Solutions:**
+
+The command `filter(flights, month = 3)` is incorrect because:
+
+1.  The `=` operator is used for **assignment** in R, not for comparison.
+2.  To filter rows where `month` equals 3, the correct operator is `==` (equality comparison).
+
+### Correct Command
+
+```{r}
+filter(flights, month == 3)
+```
+
+10) What's going on here: `filter(flights, month == 3, month == 4)`?
+
+**Solutions:**
+
+The command `filter(flights, month == 3, month == 4)` will result in an empty dataset because it is logically impossible for a single `month` value to simultaneously equal both 3 and 4.
+
+#### Why?
+
+-   `month == 3` and `month == 4` are **mutually exclusive conditions**; no row can satisfy both conditions at the same time.
+
+#### Correct Approach
+
+If you want to filter rows where the `month` is either 3 or 4, use the logical OR operator (`|`):
+
+```{r}
+filter(flights, month == 3 | month == 4)
+```
+
+11) Why does `filter(flights, month == (3 | 4))` give us flights in January?!?
+
+**Solutions:**
+
+The command `filter(flights, month == (3 | 4))` unexpectedly returns flights in January because of how R evaluates the expression `(3 | 4)`:
+
+#### Explanation
+
+1.  **Logical OR in R (`|`)**:
+    -   `3 | 4` is a logical operation. In R, any non-zero number is considered "truthy."
+    -   Thus, `3 | 4` evaluates to `TRUE`.
+2.  **Equality Comparison**:
+    -   The command becomes `filter(flights, month == TRUE)`.
+    -   When a numeric column like `month` is compared to `TRUE`, R implicitly converts `TRUE` to `1`.
+    -   As a result, this filters for rows where `month == 1` (January).
+
+#### Correct Approach
+
+To filter for flights in March or April, use the following:
+
+```{r}
+filter(flights, month %in% c(3, 4))
+```
+
+12) What does this command do? `filter(flights, dest = DTW)`
+
+**Solutions:**
+
+The command `filter(flights, dest = DTW)` will result in an **error** or unintended behavior because of the following issues:
+
+#### Issues
+
+1.  **Use of `=` instead of `==`:**
+    -   The `=` operator is for **assignment**, not for comparison. The correct operator for filtering is `==` (equality comparison).
+    -   This command is attempting to assign the value `DTW` to `dest`, which is not valid within `filter`.
+2.  **Unquoted value (`DTW`):**
+    -   `DTW` is treated as a variable name in R unless it is wrapped in quotes (e.g., `"DTW"`).
+    -   If `DTW` is not defined as an object in the environment, R will throw an error.
+
+#### Correct Command
+
+To filter flights destined for Detroit (DTW), use:
+
+```{r}
+filter(flights, dest == "DTW")
+```
+
+13) What proportion of Delta flights into DTW were delayed?
+
+**Solutions:**
+
+```{r}
+# Filter for Delta flights into DTW
+delta_dtw_flights <- flights |> 
+  filter(dest == "DTW", carrier == "DL")
+
+# Calculate the number of delayed Delta flights
+delayed_delta_dtw <- delta_dtw_flights |> 
+  filter(arr_delay > 0)
+
+# Calculate the proportion of delayed Delta flights
+proportion_delayed <- nrow(delayed_delta_dtw) / nrow(delta_dtw_flights)
+
+# Display results
+nrow(delta_dtw_flights)  # Total Delta flights into DTW
+nrow(delayed_delta_dtw)  # Delayed Delta flights into DTW
+proportion_delayed       # Proportion delayed
+```
+
+14) How many flights were missing departure times? (Hint: Use the `is.na()` function.)
+
+**Solutions:**
+
+```{r}
+# Filter for flights with missing departure times
+missing_dep_times <- flights |> 
+  filter(is.na(dep_time))
+
+# Count the number of flights with missing departure times
+num_missing_dep_times <- nrow(missing_dep_times)
+
+# Display the result
+num_missing_dep_times
+```
+
+# `arrange()`
+
+**`arrange()`** to reorder rows of data
+
+## More flights data examples
+
+15) What time was the earliest/latest departure?
+
+```{r}
+
+```
+
+**Solutions:**
+
+The earliest left at 12:01 am (or midnight) while the latest left at 11:59 pm
+
+```{r}
+# Earliest departure time
+earliest_departure <- flights |> 
+  arrange(dep_time) |> 
+  slice(1)
+
+# Latest departure time
+latest_departure <- flights |> 
+  filter(dep_time < 2400) |>  # remove midnight departures
+  arrange(desc(dep_time)) |> 
+  slice(1)
+
+# Display results
+earliest_departure
+latest_departure
+```
+
+16) How are `NA` values sorted? This command displays the last few values and might be helpful: `tail(arrange(flights, desc(dep_time)))`
+
+**Solutions:**
+
+The `NA` values are always sorted to the **end** of the dataset, regardless of whether `arrange()` is used in ascending or descending order. This behavior ensures that missing values do not interfere with the sorting of valid data.
+
+#### Verification
+
+Using the provided command:
+
+```{r}
+# Display the last few values after sorting by descending dep_time
+tail(arrange(flights, desc(dep_time)))
+```
+
+17) Find the top 10 longest flights based on time. Where did they all go? (Of course!)
+
+```{r}
+
+```
+
+**Solutions:**
+
+They all went to Hawaii!!
+
+```{r}
+# Find the top 10 longest flights based on air_time
+longest_flights <- flights |> 
+  arrange(desc(air_time)) |> 
+  slice(1:10)
+
+# Identify the destinations of the top 10 longest flights
+longest_flight_destinations <- longest_flights |> 
+  distinct(dest)
+
+# Display results
+longest_flights
+longest_flight_destinations
+```
+
+
+# `distinct()`
+
+**`distinct()`** to find all the unique rows in a dataset for the specified variable or combination of variables
+
+18) How many airplanes are represented by the flights in this dataset?
+
+
+**Solutions:**
+
+```{r}
+# Count the total number of unique airplanes in the dataset
+total_airplanes <- flights |> 
+  distinct(tailnum) |> 
+  nrow()
+
+# Display the result
+total_airplanes
+```
+
+
+
+
+19) How many distinct routes are represented by these flights?
+
+**Solutions:**
+
+```{r}
+# Count the total number of distinct routes in the dataset
+distinct_routes <- flights |> 
+  distinct(origin, dest) |> 
+  nrow()
+
+# Display the result
+distinct_routes
+```
+
+
+20) For how many airlines do we have flights?
+
+```{r}
+
+```
+
+**Solutions:**  
+
+```{r}
+# Count the total number of distinct airlines in the dataset
+distinct_airlines <- flights |> 
+  distinct(carrier) |> 
+  nrow()
+
+# Display the result
+distinct_airlines
+```
+
+
+21) What other examples can you think of for using `distinct()` here?
+
+```{r}
+
+```
+
+**Solutions:**
+
+
+### Other Examples for Using `distinct()`
+
+The `distinct()` function can be used in many ways to explore unique aspects of the `flights` dataset. Here are a few examples:
+
+---
+
+#### **Unique Departure Times**
+Determine all unique departure times in the dataset:
+```{r}
+distinct(flights, dep_time)
+```
+
+---
+
+#### **Unique Routes by Specific Airline**
+Find the unique routes flown by a specific carrier (e.g., Delta Airlines):
+```{r}
+distinct(flights |> filter(carrier == "DL"), origin, dest)
+```
+
+---
+
+#### **Unique Flight Dates**
+Identify the unique dates when flights occurred:
+```{r}
+distinct(flights, year, month, day)
+```
+
+---
+
+#### **Unique Carrier-Route Combinations**
+Find the unique carrier-route combinations:
+```{r}
+distinct(flights, carrier, origin, dest)
+```
+
+---
+
+These examples highlight different ways to use `distinct()` to uncover unique features of the dataset depending on the context of the analysis.
+
+
+22) Why might the following examples using `count()` be more useful than the commands using `distinct()` above?
+
+```{r}
+flights |> 
+  count(tailnum, sort = TRUE)
+
+flights |> 
+  count(origin, dest,sort = TRUE)
+
+# or even combine to get 
+flights |> 
+  count(origin, dest,sort = TRUE) |> 
+  arrange(n)
+```
+
+
+**Solutions:**  
+
+The `count()` function adds value over `distinct()` by not only identifying unique combinations of variables but also providing **frequency counts** for each unique combination. This makes it particularly useful for summarizing and gaining deeper insights into the dataset. Here's why:
+
+---
+
+####  **Quantifying Occurrences**
+- **`distinct()` Example:** Retrieves unique values or combinations, but does not show how often they occur.
+- **`count()` Example:**
+  ```{r}
+  flights |> count(tailnum, sort = TRUE)
+  ```
+  - This shows each airplane (`tailnum`) along with how many flights it operated, ordered by frequency. Useful for identifying heavily used aircraft.
+
+---
+
+####  **Understanding Route Popularity**
+- **`distinct()` Example:** Identifies unique routes but does not indicate their frequency.
+- **`count()` Example:**
+  ```{r}
+  flights |> count(origin, dest, sort = TRUE)
+  ```
+  - This shows the number of flights for each route. Useful for determining the most or least traveled routes.
+
+---
+
+####  **Sorting and Prioritizing**
+- Using `count()` allows for sorting based on the frequency of occurrences, making it easy to identify outliers or focus on the most relevant values. For example:
+  ```{r}
+  flights |> 
+    count(origin, dest, sort = TRUE) |> 
+    arrange(n)
+  ```
+  - This command identifies the least and most frequent routes at a glance, which is not possible with `distinct()` alone.
+
+---
+
+####  **Detecting Anomalies**
+- With `count()`, unusual patterns can be spotted. For example:
+  - Aircraft or routes with very few flights may signal rare routes or data entry issues.
+  - Routes with an unusually high number of flights might indicate hub-to-hub connections or errors.
+
+---
+
+### Summary
+While `distinct()` is useful for identifying unique combinations, `count()` provides **context through frequency**. This additional information is often more actionable for data analysis, making it easier to prioritize, summarize, and spot trends in the dataset.
