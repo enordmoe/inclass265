@@ -84,7 +84,7 @@ hfi_data |>
   select(year, countries, region, contains("regulation"))
 ```
 
-d)  Select all regulation variables
+d)  Select all gender or sex-related variables
 
 ```{r}
 # Select all gender- or sex-related variables
