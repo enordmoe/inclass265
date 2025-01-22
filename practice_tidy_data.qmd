@@ -33,6 +33,7 @@ Write a code chunk that does the following:
 **Answer:**
 
 ```{r}
+electric <- read_csv("data/electric_use.csv")
 
 ```
 
@@ -51,5 +52,6 @@ Write a code chunk that does the following:
 **Answer:**
 
 ```{r}
+enrollments <- read_csv("data/calc_enrollments.csv")
 
 ```
