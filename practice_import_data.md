@@ -36,7 +36,7 @@ Use the `na=` argument to specify non-standard or missing NA codes.
 The R `read_csv()` function deals with names that violate R variable
 naming rules (e.g., start with numbers, contain blanks, etc.) by
 preserving the names but adding single tick marks (\`) around them so
-they are correct recognized as variable names when used in code. The
+they are correctly recognized as variable names when used in code. The
 `students.csv` data contains examples of these kinds of names.
 
 ``` r
@@ -114,6 +114,7 @@ following
 ``` r
 message <- "Hello\nworld!"
 print(message)
+cat(message)
 ```
 
 If you prefer, you can also specify custom variable names using the
