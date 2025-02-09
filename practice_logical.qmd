@@ -1,0 +1,51 @@
+---
+title: "Chapter 12: Logical Vectors Practice"
+name: "Eric Nordmoe"
+date: today
+format: 
+    gfm: 
+      toc: true
+      toc-depth: 2
+      fig-height: 4
+      fig-width: 9
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(nycflights13)
+```
+
+**1.** Use `mutate()`, `is.na()`, and `count()` together to describe how the missing values in `dep_time`, `sched_dep_time` and `dep_delay` are related
+
+**Answer:**
+
+```{r}
+
+```
+
+**2.** Find all flights where `arr_delay` is missing but `dep_delay` is not. Find all flights where neither `arr_time` nor `sched_arr_time` are missing, but `arr_delay` is.
+
+**Answer:**
+
+```{r}
+
+```
+
+
+**3.** Examine flight cancellations by time of day and by month. Specifically, determine:  
+- At what times of day are cancellations most common? Use the `hour` variable and exclude any flights before 5 am.
+- In which months do cancellations occur most frequently?  
+- Is there a relationship between the proportion of flights canceled on a given day and the average delay of the flights that did take off?  Use `coord_cartesian()` to limit your plot to include only days where the proportion canceled was less than 0.3.
+  
+Use `mutate()`, `is.na()`, and `count()` or `summarize()` to explore these patterns. Create visualizations to support your findings.
+
+**Answer:** 
+
+```{r}
+
+```
+
