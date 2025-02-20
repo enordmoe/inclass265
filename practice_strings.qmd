@@ -7,7 +7,6 @@ format:
       toc: true
       number-sections: true
       number-depth: 3
-editor: visual
 ---
 
 ```{r}
@@ -15,20 +14,20 @@ editor: visual
 #| include: false
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(NHANES)
+
 ```
 
 Many data sets have character strings in them. For example, in a file of tweets from Twitter (which are basically just strings of characters), perhaps you want to search for occurrences of a certain word or twitter handle. Or a character variable in a data set might be location with a city and state abbreviation, and you want to extract those observations with location containing "NY."
 
 In this tutorial, you will learn how to manipulate text data using the package **stringr** and how to match patterns using regular expressions. The package **stringr** Some of the most commonly used commands include:
 
-| Command          | Description                                                 |
-|--------------------|----------------------------------------------------|
-| `str_sub`        | Extract substring from a given start to end position        |
-| `str_detect`     | Detect presence/absence of first occurrence of substring    |
-| `str_locate`     | Give position (start, end) of first occurrence of substring |
-| `str_locate_all` | Give positions of all occurrences of a substring            |
-| `str_replace`    | Replace one substring with another                          |
+| Command | Description |
+|---------------------|---------------------------------------------------|
+| `str_sub` | Extract substring from a given start to end position |
+| `str_detect` | Detect presence/absence of first occurrence of substring |
+| `str_locate` | Give position (start, end) of first occurrence of substring |
+| `str_locate_all` | Give positions of all occurrences of a substring |
+| `str_replace` | Replace one substring with another |
 
 # Extracting and locating substrings
 
@@ -92,22 +91,9 @@ To find all instances of "an" within each string:
 
 **Answer**
 
-The command `str_locate_all` returns a *list* (more about those [here](https://r4ds.hadley.nz/rectangling#lists)).
-
-```{r}
-out <- str_locate_all(fruits, "an")
-data.class(out)
-out[[6]]
-unlist(out)
-length(unlist(out))/2    #total number of times "an" occurs in vector fruits
-```
 
 The above example makes use of the fact that `str_locate_all()` returns a list. The command `str_count()` provides an easier and more direct way to count the number of times "an" occurs in the names of the fruits:
 
-```{r}
-str_count(fruits, "an")
-sum(str_count(fruits, "an"))
-```
 
 **Question 8:** Following the example immediately above, use `str_detect()` or `str_count()` command to output the number of these 6 words that contain the string "an".
 
@@ -216,7 +202,7 @@ str_replace(info, last4, "XXXX")
 
 # Remarks
 
-1. As we noted above, certain characters are reserved. If we want to actually reference them in a regular expression, either put them within a bracket, or use a double forward slash.
+1.  As we noted above, certain characters are reserved. If we want to actually reference them in a regular expression, either put them within a bracket, or use a double forward slash to "escape" them.
 
 ```{r}
 str_locate(info, "[.]")  #find first instance of period
@@ -224,7 +210,7 @@ str_locate(info, "\\.")  #same
 str_locate(info, ".")    #first instance of any character
 ```
 
-2. Metacharacters have different meanings within brackets.
+2.  Metacharacters have different meanings within brackets.
 
 For example, the caret character "\^" indicates the starting point outside brackets but negation inside.
 
@@ -234,9 +220,9 @@ str_detect(fruits, "[^Pp]")  #any character except 'P' or 'p'
 str_detect(fruits, "^[^Pp]") #start with any character except 'P' or 'p'
 ```
 
-3.  See the summary of regular expressions posted on [Moodle](https://moodle.kzoo.edu/mod/resource/view.php?id=357918). This is a much more manageable (but still extensive!) set of regexp expressions as an alternative the the RStudio Cheat Sheet.
+3.  See the summary of regular expressions posted on [here](http://people.kzoo.edu/enordmoe/math265/regExp.pdf). This is a much more manageable (but still extensive!) set of regexp expressions as a more user-friendly alternative to the RStudio stringr Cheat Sheet.
 
-4. Matching brackets or html tags
+4.  Matching brackets or html tags
 
 In some situations, you may want to match brackets such as \[8\] or html tags such as `<table>`.
 

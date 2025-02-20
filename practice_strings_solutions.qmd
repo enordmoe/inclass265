@@ -1,0 +1,125 @@
+---
+title: "Chapter 14: Strings Practice with Solutions"
+author: "Sample Solutions"
+date: today
+format: 
+    html: 
+      toc: true
+      number-sections: true
+      number-depth: 3
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Many data sets have character strings in them. For example, in a file of tweets from Twitter (which are basically just strings of characters), perhaps you want to search for occurrences of a certain word or Twitter handle. Or a character variable in a data set might be location with a city and state abbreviation, and you want to extract those observations with location containing "NY."
+
+In this tutorial, you will learn how to manipulate text data using the package **stringr** and how to match patterns using regular expressions.
+
+# Extracting and locating substrings
+
+```{r}
+library(stringr)
+fruits <- c("apple", "pineapple", "Pear", "orange", "peach", "banana")
+```
+
+**Question 1:** What are the characters in the first through third position of each string in `fruits`?
+
+```{r}
+str_sub(fruits, 1, 3)
+```
+
+**Question 2:** What happens if you enter a position number greater than the number of characters in the string?
+
+```{r}
+str_sub(fruits, 2, 10)
+```
+
+R does not complain but returns available characters without error.
+
+**Question 3:** What happens if you enter just a single number? What if it's a negative number?
+
+```{r}
+str_sub(fruits, 3)   # From 3rd character to end
+str_sub(fruits, -3)  # Last three characters
+```
+
+**Question 4:** Is pattern matching case-sensitive?
+
+```{r}
+str_detect(fruits, "p")
+str_detect(fruits, "P")
+```
+
+Yes, it is case-sensitive.
+
+**Question 5:** Which fruits contain "an"?
+
+```{r}
+fruits[str_detect(fruits, "an")]
+```
+
+**Question 6:** If there is more than one occurrence of the string, which occurrences are returned?
+
+```{r}
+str_locate_all(fruits, "an")
+```
+
+All occurrences are returned.
+
+**Question 7:** What kind of object is returned by `str_locate_all()`?
+
+```{r}
+out <- str_locate_all(fruits, "an")
+out
+class(out)
+
+```
+
+It returns a list.
+
+**Question 8:** Output the number of these 6 words that contain the string "an".
+
+```{r}
+sum(str_detect(fruits, "an"))
+```
+
+# Regular expressions
+
+```{r}
+str_view(fruits, "^[Pp]")
+str_view(fruits, "e$")
+```
+
+**Question 9:** Replace all periods with dash characters.
+
+```{r}
+info <- c("Home: 507-645-5489", "Cell: 219.917.9871", "My work phone is 507-202-2332", "I don't have a phone")
+str_replace_all(info, "\\.", "-")
+```
+
+# On your own
+
+```{r}
+veggies <- c("carrot", "bean", "peas", "cabbage", "scallion", "asparagus")
+str_detect(veggies, "ea")
+str_detect(veggies, "s$")
+str_detect(veggies, "a.*a")
+str_detect(veggies, "^[^c]")
+str_locate(veggies, "ca")
+```
+
+**Question:** Why does `"^[Ss](.*)(t+)(.+)(t+)"` match "scuttlebutt", "Stetson", and "Scattter", but not "Scatter"?
+
+```{r}
+str_view(c("scuttlebutt", "Stetson", "Scattter", "Scatter"), "^[Ss](.*)(t+)(.+)(t+)")
+```
+
+The expression requires at least two `t`s separated by one or more characters.
+
+# More Resources
+- [Regular expressions with R](http://www.regular-expressions.info/rlanguage.html)
