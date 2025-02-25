@@ -151,7 +151,7 @@ lakers <- lakers |>
 head(lakers)
 ```
 
-Since periods have relative lengths, it is dangerous to compare them to each other. So we should next convert our periods to *durations* which have exact lengths. 
+Since time here is represented in minutes and seconds, it's difficult to deal with. Instead, we should convert our time periods to *durations* which have exact lengths in seconds. 
 
 ```{r}
 lakers <- lakers |> 
@@ -161,11 +161,19 @@ tail(lakers)
 
 See how the representation of *time* has changed? Unfortunately, **ggplot2** will not plot a histogram of durations so we need to convert time to a **period** for plotting purposes. (This appears to be something of a bug since earlier work on **lubridate** suggests this should be possible.)  
 
-For the current analysis, it will be useful to proceed to construct a variable that represents the amount of time elapsed in the game beginning at 0 and extending to the end of the game, up to 48 minutes for a regular length game or 53 minutes for an overtime game. At the start of each period, the game clocks counts down from 12:00. To calculate how much play time elapses before each play, we subtract the time that appears on the game clock from a duration of 12, 24, 36, 48, or 53 minutes (depending on the period of play). We now have a new duration that shows exactly how far into the game each play occurred. You may need to study the code to understand how it's working. It uses indexing to grab the number of minutes corresponding to the period.
+For the current analysis, it will be useful to proceed to construct a variable that represents the amount of time elapsed in the game beginning at 0 and extending to the end of the game, up to 48 minutes for a regular length game or 53 minutes for an overtime game. At the start of each period, the game clocks counts down from 12:00. To calculate how much play time elapses before each play, we subtract the time that appears on the game clock from a duration of 12, 24, 36, 48, or 53 minutes (depending on the period of play). We now have a new duration that shows exactly how far into the game each play occurred. You may need to study the code to understand how it's working. It uses `case_when()` to grab the number of minutes corresponding to the period.
 
 ```{r}
 lakers <- lakers |> 
-  mutate(newtime =(dminutes(c(12, 24, 36, 48, 53)[period]) - time))
+# See case_when() in Section 12 of RDS 
+    mutate(newtime = case_when(
+    period == 1 ~ dminutes(12) - time,
+    period == 2 ~ dminutes(24) - time,
+    period == 3 ~ dminutes(36) - time,
+    period == 4 ~ dminutes(48) - time,
+    period == 5 ~ dminutes(53) - time  # Allow for overtime
+  )
+  )
 str(lakers$newtime)
 head(lakers)
 tail(lakers)
@@ -180,7 +188,7 @@ lakers |>
   geom_histogram(binwidth = 60)
 ```
 
-We can get an easier to read graph by converting to minutes. 
+We can get an easier to interpret graph by converting to minutes remembering that NBA quarters last 12 minutes. 
 
 ```{r}
 lakers |>  
@@ -190,7 +198,7 @@ lakers |>
   labs(x = "Minutes", y = "Plays")
 ```
 
-We see that the number of plays peaks within each of the four periods and then drops at the beginning of each new period. The most plays occur in the last minute of the game. Desperation shots and strategic fouling may result in the large number of plays at the end of the game. Far fewer plays occur in overtime since only a small portion of all games go to overtime.  
+We see that the number of plays peaks within each of the four periods and then drops at the beginning of each new period. The most plays occur in the last minute of the game. We may suspect that desperation shots and strategic fouling result in the large number of plays at the end of the game. Far fewer plays occur in overtime since only a small portion of all games go to overtime.  
 
 ## Analyzing a Single Game
 
@@ -212,23 +220,22 @@ attempts <- game1 |>
 With the data set **attempts** containing the duration variable *wait*, we can plot a histogram of time between shots using the `seconds()` function to access the seconds component. Use a reasonable binwidth to get a detailed picture of the histogram. 
 
 ```{r}
-# 
 ggplot(attempts) +
-  geom_histogram(aes(x = seconds(wait)), binwidth = 2)+
+  geom_histogram(aes(x = seconds(wait)), binwidth = 2) +
   labs(x = "Time between shots (secs)")
 ```
 
 Rarely did more than 30 seconds go by without a shot attempt.  
 
 
-One other analysis often of interest with game level data is to track the score against elapsed time. We revisit some of the skills we learned earlier in the term to filter out cases that do not produce points (`team~= "OFF"`) and compute cumulative points for each time.  
+One other analysis often of interest with game level data is to track the score against elapsed time. We revisit some of the skills we learned earlier in the term to filter out cases that do not produce points (`team != "OFF"`) and compute cumulative points for each time.  
 
 ```{r}
 game1_scores <- game1 |>
   filter(team != "OFF") |>
   group_by(team) |>
   mutate(score = cumsum(points))
-ggplot(game1_scores, aes(x = seconds(newtime)/60, y = score, color = team))+ 
+ggplot(game1_scores, aes(x = newtime/60, y = score, color = team))+ 
   geom_line() + 
   labs(x = "Minutes Elapsed", y = "Score")
 ```
